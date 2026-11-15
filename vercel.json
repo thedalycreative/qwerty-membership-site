@@ -2,23 +2,56 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "redirects": [
-    { "source": "/book", "destination": "/setup-day", "permanent": false },
-    { "source": "/setup", "destination": "/setup-day", "permanent": false }
+    {
+      "source": "/join",
+      "destination": "/membership",
+      "permanent": false
+    },
+    {
+      "source": "/book",
+      "destination": "/membership",
+      "permanent": false
+    },
+    {
+      "source": "/setup",
+      "destination": "/membership",
+      "permanent": false
+    },
+    {
+      "source": "/setup-day",
+      "destination": "/membership",
+      "permanent": false
+    }
   ],
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        }
       ]
     },
     {
       "source": "/assets/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
       ]
     }
   ]

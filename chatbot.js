@@ -1,8 +1,8 @@
-// TDC AI Chatbot Widget
+// QWERTY Club concierge chat widget
 // Communicates with /api/chat (Anthropic-backed serverless function)
 
 (function () {
-  const STORAGE_KEY = 'tdc_chat_history_v1';
+  const STORAGE_KEY = 'qwerty_chat_history_v1';
   const MAX_HISTORY = 20;
 
   const $toggle = document.getElementById('cb-toggle');
@@ -31,15 +31,9 @@
     } catch (e) {}
   }
 
-  // Inline spark SVG with explicit 14px size — avoids <use href> issues with innerHTML
-  function sparkSvg() {
-    return `<svg viewBox="-50 -50 100 100" style="width:14px;height:14px;display:block;transform:rotate(8deg);" aria-hidden="true">
-      <g fill="white">
-        <rect x="-6" y="-44" width="12" height="88" rx="6"/>
-        <rect x="-6" y="-44" width="12" height="88" rx="6" transform="rotate(60)"/>
-        <rect x="-6" y="-44" width="12" height="88" rx="6" transform="rotate(120)"/>
-      </g>
-    </svg>`;
+  // Keycap avatar for the concierge
+  function keyGlyph() {
+    return 'Q';
   }
 
   function escapeHtml(str) {
@@ -51,16 +45,16 @@
   function formatBubble(text) {
     let html = escapeHtml(text);
     html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-    html = html.replace(/(https?:\/\/[^\s<)]+)/g, '<a href="$1" target="_blank" rel="noopener" style="color: var(--accent-orange); text-decoration: underline;">$1</a>');
-    html = html.replace(/(\bhello@thedalycreative\.com\b)/g, '<a href="mailto:hello@thedalycreative.com" style="color: var(--accent-orange); text-decoration: underline;">$1</a>');
+    html = html.replace(/(https?:\/\/[^\s<)]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>');
+    html = html.replace(/(\bhello@qwerty\.club\b)/g, '<a href="mailto:hello@qwerty.club">$1</a>');
     html = html.replace(/\n/g, '<br>');
     return html;
   }
 
   function renderMsg(role, text) {
     const wrap = document.createElement('div');
-    wrap.className = 'cb-msg ' + (role === 'user' ? 'user' : 'tdc');
-    const avatarContent = role === 'user' ? '' : sparkSvg();
+    wrap.className = 'cb-msg ' + (role === 'user' ? 'user' : 'qw');
+    const avatarContent = role === 'user' ? '' : keyGlyph();
     wrap.innerHTML = `
       <div class="cb-msg-avatar">${avatarContent}</div>
       <div class="cb-bubble">${formatBubble(text)}</div>
@@ -71,10 +65,10 @@
 
   function renderTyping() {
     const wrap = document.createElement('div');
-    wrap.className = 'cb-msg tdc';
+    wrap.className = 'cb-msg qw';
     wrap.id = 'cb-typing-row';
     wrap.innerHTML = `
-      <div class="cb-msg-avatar">${sparkSvg()}</div>
+      <div class="cb-msg-avatar">${keyGlyph()}</div>
       <div class="cb-bubble"><div class="cb-typing"><span></span><span></span><span></span></div></div>
     `;
     $body.appendChild(wrap);
@@ -89,9 +83,9 @@
   function renderHistory() {
     $body.innerHTML = '';
     if (history.length === 0) {
-      renderMsg('tdc', "Hi — I'm the TDC assistant. Happy to walk you through Setup Day, talk through what we'd automate for your business, or just answer questions.\n\nWhat brings you here?");
+      renderMsg('qw', "Hey, I'm the QWERTY club concierge. Ask me about the membership tiers, this month's drop, or which switches to try first.\n\nWhat are you typing on right now?");
     } else {
-      history.forEach(m => renderMsg(m.role === 'user' ? 'user' : 'tdc', m.content));
+      history.forEach(m => renderMsg(m.role === 'user' ? 'user' : 'qw', m.content));
     }
   }
 
@@ -119,9 +113,9 @@
 
       if (!res.ok) {
         const errText = res.status === 429
-          ? "I'm getting a lot of chat right now — try again in a moment, or just email hello@thedalycreative.com directly."
-          : "Something went sideways on my end. Email hello@thedalycreative.com and Tim will reply within 24 hours.";
-        renderMsg('tdc', errText);
+          ? "I'm getting a lot of chat right now — try again in a moment, or email hello@qwerty.club."
+          : "Something went sideways on my end. Email hello@qwerty.club and the crew will get back to you within a day.";
+        renderMsg('qw', errText);
         busy = false;
         $send.disabled = false;
         return;
@@ -130,13 +124,13 @@
       const data = await res.json();
       const reply = (data && data.message) || "Sorry, I dropped the thread. Try again?";
 
-      const tdcMsg = { role: 'assistant', content: reply };
-      history.push(tdcMsg);
-      renderMsg('tdc', reply);
+      const botMsg = { role: 'assistant', content: reply };
+      history.push(botMsg);
+      renderMsg('qw', reply);
       saveHistory();
     } catch (e) {
       removeTyping();
-      renderMsg('tdc', "Connection hiccup. Try again, or just email hello@thedalycreative.com.");
+      renderMsg('qw', "Connection hiccup. Try again, or email hello@qwerty.club.");
     }
 
     busy = false;

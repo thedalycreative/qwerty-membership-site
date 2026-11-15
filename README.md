@@ -1,151 +1,68 @@
-# The Daly Creative — Marketing Site
+# QWERTY Club — Membership Site
 
-Brand, web, and AI automation for solo operators and small businesses in WA. Lead-gen site with Claude-powered AI chatbot.
+A members' club for mechanical keyboard people: monthly keycap drops, members-only group buys and build nights. Marketing + membership site with a Claude-powered "club concierge" chatbot.
 
-**Stack:** Static HTML/CSS/JS + Vercel serverless function + Anthropic API. No build step, no framework, ~250 KB total.
+> Portfolio concept designed and built by [The Daly Creative](https://thedalycreative.com). QWERTY is a fictional brand; the contact email `hello@qwerty.club` is a placeholder.
+
+**Stack:** Static HTML/CSS/JS + Vercel serverless function + Anthropic API. No build step, no framework.
 
 ---
 
 ## What's in here
 
 ```
-tdc-site/
-├── index.html          Homepage (hero, services, Setup Day teaser, testimonials)
-├── setup-day.html      Setup Day sales page ($997 lead offer)
-├── chatbot.js          Frontend chat widget — talks to /api/chat
+qwerty-membership-site/
+├── index.html          Homepage (hero, perks, this month's drop, member notes)
+├── membership.html     Membership tiers (Switch $9 · Keycap $29 · Custom $79) + FAQ
+├── styles.css          Shared brand styles (palette, keycap components, chatbot)
+├── site.js             Light/dark theme toggle (remembers choice)
+├── chatbot.js          Concierge chat widget — talks to /api/chat
 ├── api/
-│   └── chat.js         Vercel serverless function calling Claude Haiku 4.5
-├── assets/             SVG brand assets (favicon, spark mark, logo)
-├── vercel.json         Routing + security headers
-├── .env.example        Required env vars
-└── README.md           This file
+│   └── chat.js         Vercel serverless function calling Claude Haiku 4.5 with the QWERTY system prompt
+├── assets/             SVG brand assets (favicon, app icon, QWERTY keycap lockup)
+├── vercel.json         Routing, redirects (/join, /book, /setup-day → /membership), security headers
+└── .env.example        Required env vars
 ```
 
----
-
-## Deploy in 10 minutes
-
-### 1. Push to GitHub (2 min)
-
-```bash
-cd tdc-site
-git init
-git add .
-git commit -m "Initial commit"
-gh repo create tdc-site --public --source=. --remote=origin --push
-```
-
-If you don't have `gh` CLI: create the repo manually on github.com, then:
-```bash
-git remote add origin https://github.com/timdaly/tdc-site.git
-git branch -M main
-git push -u origin main
-```
-
-### 2. Import to Vercel (3 min)
-
-1. Go to https://vercel.com/new
-2. Import your `tdc-site` repo (Vercel auto-detects it as static + serverless)
-3. **Before clicking Deploy**, add the environment variable:
-   - Name: `ANTHROPIC_API_KEY`
-   - Value: your key from https://console.anthropic.com/settings/keys
-4. Click Deploy. ~30 seconds later you'll have a live URL like `tdc-site-xyz.vercel.app`.
-
-### 3. Test the chatbot (1 min)
-
-Visit your Vercel URL. Click the spark icon bottom-right. Send a message. If you get a reply, the API key is wired.
-
-If you get "Server config error" — your env var isn't set. Go to Vercel → Project → Settings → Environment Variables, add `ANTHROPIC_API_KEY`, then redeploy (Deployments tab → ⋯ → Redeploy).
-
-### 4. Connect your domains (4 min)
-
-**Primary: thedalycreative.com** (already owned)
-1. Vercel → Project → Settings → Domains → Add `thedalycreative.com` and `www.thedalycreative.com`
-2. Vercel will show you DNS records (an A record + CNAME). Go to wherever your domain is registered, paste them in.
-3. SSL provisions in 1–5 minutes.
-
-**Secondary: tdc.com.au** (~$20/year)
-1. Register at [VentraIP](https://ventraip.com.au) (~$18/yr) or [Crazy Domains](https://crazydomains.com.au) (~$20/yr). VentraIP is better — no upsells.
-2. In Vercel → Settings → Domains → Add `tdc.com.au` and `www.tdc.com.au`
-3. Vercel will give you DNS records. Paste into VentraIP's DNS manager.
-4. In Vercel, set `tdc.com.au` to **redirect to thedalycreative.com** (cleaner — one source of truth, SEO benefits)
+`styles.css` lives at the root, not in `/assets/`, because `vercel.json` serves `/assets/*` with a one-year immutable cache.
 
 ---
 
-## Email setup — `hello@thedalycreative.com`
+## Brand
 
-Two free paths. Pick one.
+| Token | Value | Use |
+|-------|-------|-----|
+| Ink | `#1c1b19` | Text, dark band |
+| Cream | `#f3eee4` | Page background |
+| Paper | `#fbf8f2` | Cards, neutral keycaps |
+| Escape blue | `#3355ff` | Primary accent, "Q" key, buttons |
+| Butter | `#ffcf3f` | Secondary accent, "Y" key, highlights |
 
-### Option A: Zoho Mail (recommended — real inbox)
-
-- Free for up to 5 mailboxes on your own domain
-- Sign up: https://www.zoho.com/mail/zohomail-pricing.html (Forever Free Plan)
-- They'll give you DNS records (MX, SPF, DKIM) — add to your domain registrar
-- Set up `hello@thedalycreative.com`, optionally `tim@thedalycreative.com`
-- 5 GB storage, web + mobile app, webmail interface is actually decent
-- **Cost: $0/month forever**
-
-### Option B: Cloudflare Email Routing (forwarding only)
-
-- Free, set up in 5 minutes
-- Routes `hello@thedalycreative.com` → your existing Gmail inbox
-- To **send** as `hello@thedalycreative.com` from Gmail, you'll need to add a "Send mail as" alias with an SMTP relay (e.g. SendGrid free tier = 100 emails/day)
-- More fiddly than Zoho but zero cost
-- Setup: https://blog.cloudflare.com/introducing-email-routing/
-
-**Recommendation:** Zoho. Costs nothing, looks more professional, no SMTP headaches.
+- **Type:** Space Grotesk (display/body), JetBrains Mono (labels, keycaps)
+- **Logo:** six keycaps spelling QWERTY — blue Q, butter Y, cream in between (`assets/qwerty-lockup.svg`). Mark: a single blue Q keycap (`assets/qwerty-favicon.svg`).
+- **Buttons** press down like keys (offset bottom shadow collapses on `:active`).
 
 ---
 
-## Running costs
+## Deploy
 
-| Item | Cost |
-|------|------|
-| Domain — thedalycreative.com | already owned |
-| Domain — tdc.com.au | ~$18-20/yr (~$1.50/mo) |
-| Vercel hosting | Free (Hobby tier — fine until you do real traffic) |
-| Anthropic API (Claude Haiku 4.5) | ~$0.0024/conversation. 1000 chats/month ≈ **$2.40** |
-| Zoho Mail | Free |
-| **Total typical month** | **~$4** |
-
-If chatbot traffic explodes (10,000+ chats/month), you might hit ~$25. Vercel Hobby tier handles ~100GB bandwidth/month free — easily 50,000+ visits.
-
----
+1. Vercel project is connected to this repo — pushing to `main` deploys production.
+2. Required env var: `ANTHROPIC_API_KEY` (Vercel → Project → Settings → Environment Variables).
+3. Test the chatbot: click the **Q** key bottom-right and send a message. "Server config error" means the env var is missing.
 
 ## Local development
 
 ```bash
-# Install Vercel CLI (one-time)
 npm i -g vercel
-
-# Run locally with serverless function support
-cd tdc-site
-vercel dev
+vercel dev        # http://localhost:3000, serves static files + /api/chat
 ```
 
-`vercel dev` runs on `http://localhost:3000` and handles both the static files and the `/api/chat` endpoint. You'll need to add `ANTHROPIC_API_KEY` to a `.env.local` file (copy from `.env.example`).
+Add `ANTHROPIC_API_KEY` to `.env.local` (copy from `.env.example`).
 
 ---
 
-## Iteration ideas (later sessions)
+## Editing notes
 
-- **Lead capture form** in chatbot — when user says "I'm interested", trigger an email-collection bubble that POSTs to a Resend/SendGrid endpoint
-- **Brand audit tool** — port your existing audit tool from past sessions onto `/audit`
-- **Solo Op AI Playbook page** at `/playbook` for the $99 tier
-- **Work portfolio** at `/work`
-- **Blog/notes** at `/notes` — short writing on AI automation for solo ops, drives SEO + signal
-- **Newsletter signup** — Buttondown free tier (100 subscribers free) or ConvertKit
-- **Conversion analytics** — Vercel Analytics is free; add Plausible if you want privacy-friendly tracking
-- **Calendar booking** — Cal.com free, embed it on `/setup-day` for instant Monday brief calls
-
----
-
-## Notes for future-Tim
-
-- **Spot counter**: The "12 of 40 taken" is currently hardcoded in `index.html` and `setup-day.html`. When you make a sale, update both. Later, wire this to a KV store if you want it dynamic.
-- **System prompt**: Lives in `api/chat.js`. Edit it as you learn what visitors actually ask. The chatbot only gets smarter when you teach it.
-- **Brand**: All visual tokens match the brand portal (`tdc-brand-portal.html`). Cross-reference if you fork the design.
-
----
-
-Built with too much coffee and just enough caffeine. Perth, WA.
+- **Drop counter / dates** ("Drop #14", "212 / 300 claimed") are hardcoded in `index.html` and `membership.html`.
+- **Tiers & policies** appear in `membership.html` *and* the system prompt in `api/chat.js` — update both together so the concierge doesn't contradict the page.
+- **Join buttons** are `mailto:` placeholders; swap for a Stripe Checkout / Memberful link if this goes live.

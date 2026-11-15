@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="112" fill="#f3eee4"/>
+  <rect x="96" y="128" width="320" height="300" rx="56" fill="#1c33b0"/>
+  <rect x="96" y="96" width="320" height="300" rx="56" fill="#3355ff"/>
+  <text x="256" y="300" text-anchor="middle" font-family="JetBrains Mono, ui-monospace, monospace" font-weight="700" font-size="180" fill="#ffffff">Q</text>
+</svg>

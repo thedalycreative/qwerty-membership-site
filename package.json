@@ -1,9 +1,9 @@
 {
-  "name": "tdc-site",
+  "name": "qwerty-membership-site",
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "The Daly Creative — marketing site with AI chatbot",
+  "description": "QWERTY Club: membership site for mechanical keyboard people, with AI concierge chat",
   "engines": {
     "node": ">=20"
   }
